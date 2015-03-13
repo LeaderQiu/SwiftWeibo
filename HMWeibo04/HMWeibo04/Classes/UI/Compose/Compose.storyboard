@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7519.1" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="tFb-cl-k4O">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7513.1"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="UNW-fD-ehs">
+            <objects>
+                <navigationController id="tFb-cl-k4O" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="5N0-O4-3Zh">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="5Mh-aH-T3e" kind="relationship" relationship="rootViewController" id="f59-Wg-YZ9"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ea7-vj-tsl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-440" y="163"/>
+        </scene>
+        <!--撰写微博-->
+        <scene sceneID="wQe-rS-ma0">
+            <objects>
+                <viewController id="5Mh-aH-T3e" customClass="ComposeViewController" customModule="HMWeibo04" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="bsS-Lv-fer"/>
+                        <viewControllerLayoutGuide type="bottom" id="K97-Lp-BoX"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="gra-Ld-Vgt">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="撰写微博" id="JaJ-PZ-MNa">
+                        <barButtonItem key="leftBarButtonItem" title="取消" id="lv2-b2-Bi9">
+                            <connections>
+                                <action selector="cancel:" destination="5Mh-aH-T3e" id="EpQ-ZN-DOO"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" title="发送" id="hoS-5U-efh"/>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xuS-3j-lHH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="435" y="253"/>
+        </scene>
+    </scenes>
+</document>
