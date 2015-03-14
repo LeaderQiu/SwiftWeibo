@@ -8,6 +8,9 @@
 
 import UIKit
 
+// 定义全局常量
+let WB_Login_Successed_Notification = "WB_Login_Successed_Notification"
+
 class OAuthViewController: UIViewController {
 
     let WB_API_URL_String       = "https://api.weibo.com"
@@ -52,25 +55,17 @@ extension OAuthViewController: UIWebViewDelegate {
             "code": code]
 
             let net = NetworkManager.sharedManager
-            net.requestJSON(.POST, "https://api.weibo.com/oauth2/access_token", params, completion: { (result, error) -> () in
+            net.requestJSON(.POST, "https://api.weibo.com/oauth2/access_token", params) { (result, error) -> () in
                 
                 println(result)
                 let token = AccessToken(dict: result as! NSDictionary)
                 token.saveAccessToken()
                 
-//                let token = AccessToken(dict: result as! NSDictionary)
-                // 提问：对于 AccessToken 字典转模型，我们应该用框架吗？
-                // 对于简单的模型，应该直接使用 KVC 即可！
-                // JSON Model 1000，3s / 800M+
-                // 4.1s 20M
-//                println(token.access_token)
-            })
+                // 切换UI - 通知
+                NSNotificationCenter.defaultCenter().postNotificationName(WB_Login_Successed_Notification, object: nil)
+            }
         }
         if !result.load {
-            println(request.URL)
-//            SVProgressHUD.showInfoWithStatus("不加载")
-            // 如果不加载页面，需要重新刷新授权页面
-            // TODO: 有可能会出现多次加载页面，现在真的不正常了！
             // 只有点击取消按钮，才需要重新刷新授权页面
             if result.reloadPage {
                 SVProgressHUD.showInfoWithStatus("你真的残忍的拒绝吗？", maskType: SVProgressHUDMaskType.Gradient)

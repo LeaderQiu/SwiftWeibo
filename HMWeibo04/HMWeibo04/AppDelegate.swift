@@ -15,28 +15,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        
+        // 检查沙盒中是否已经保存的 token
+        // 如果已经存在 token，应该直接显示主界面
         if let token = AccessToken.loadAccessToken() {
             println(token.debugDescription)
             println(token.uid)
+            
+            showMainInterface()
+        } else {
+            // 添加通知监听，监听用户登录成功
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: "showMainInterface", name: WB_Login_Successed_Notification, object: nil)
         }
         
-        // 实例化对象的时候，()就是调用默认的构造函数
-        let net = SimpleNetwork()
+        return true
+    }
+    
+    ///  显示主界面
+    func showMainInterface() {
+        // 通知在不需要的时候，要及时销毁
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: WB_Login_Successed_Notification, object: nil)
         
-        let urls = ["http://ww1.sinaimg.cn/thumbnail/62c13fbagw1epuww0k4xgj20c8552b29.jpg",
-        "http://ww3.sinaimg.cn/thumbnail/e362b134jw1epuxb47zoyj20dw0ku421.jpg",
-        "http://ww1.sinaimg.cn/thumbnail/e362b134jw1epuxbaym1sj20ku0dwgpu.jpg",
-        "http://ww2.sinaimg.cn/thumbnail/e362b134jw1epuxbdhirmj20dw0kuae8.jpg"]
+        let sb = UIStoryboard(name: "Main", bundle: nil)
+        window!.rootViewController = sb.instantiateInitialViewController() as? UIViewController
         
-        println(net.downloadImages(urls, { (result, error) -> () in
-            println("OK")
-        }))
-     
         // 设置 nav 按钮的外观
         setNavAppearance()
-        
-        return true
     }
     
     ///  设置按钮的 tintColor

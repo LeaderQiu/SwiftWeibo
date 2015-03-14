@@ -9,49 +9,48 @@
 import Foundation
 
 ///  常用的网络访问方法
-public enum HTTPMethod: String {
+enum HTTPMethod: String {
     case GET = "GET"
     case POST = "POST"
 }
 
-public class SimpleNetwork {
+class SimpleNetwork {
 
     // 定义闭包类型，类型别名－> 首字母一定要大写
-    public typealias Completion = (result: AnyObject?, error: NSError?) -> ()
+    typealias Completion = (result: AnyObject?, error: NSError?) -> ()
     
-    func demoGCDGroup() {
-        /**
-        dispatch_group_async(dispatch_group_t group, dispatch_queue_t queue, dispatch_block_t block)
-        {
-            dispatch_retain(group);
+    ///  异步下载网路图像
+    ///
+    ///  :param: urlString  urlString
+    ///  :param: completion 完成回调
+    func requestImage(urlString: String, _ completion: Completion) {
         
-            // 一旦使用了 enter，后续的 block 就会被 group 监听
-            dispatch_group_enter(group);
-        
-            dispatch_async(queue, ^{
-                block();
-        
-                // 异步执行完毕之后，必须要使用 dispatch_group_leave
-                dispatch_group_leave(group);
-        
-                dispatch_release(group);
-                });
-        }
-        */
-        
-        // 利用调度组统一监听一组异步任务执行完毕
-        let group = dispatch_group_create()
-        
-        dispatch_group_async(group, dispatch_get_global_queue(0, 0)) { () -> Void in
-            
-        }
-        
-        dispatch_group_notify(group, dispatch_get_main_queue()) { () -> Void in
-            // 所有任务完成后的回调
+        // 1. 调用 download 下载图像，如果图片已经被缓存过，就不会再次下载
+        downloadImage(urlString) { (_, error) -> () in
+            // 2.1 错误处理
+            if error != nil {
+                completion(result: nil, error: error)
+            } else {
+                // 2.2 图像是保存在沙盒路径中的，文件名是 url ＋ md5
+                let path = self.fullImageCachePath(urlString)
+                // 将图像从沙盒加载到内存
+                var image = UIImage(contentsOfFile: path)
+                
+                // 提示：尾随闭包，如果没有参数，没有返回值，都可以省略！
+                dispatch_async(dispatch_get_main_queue()) {
+                    completion(result: image, error: nil)
+                }
+            }
         }
     }
     
-    ///  下载多张图片
+    ///  完整的 URL 缓存路径
+    func fullImageCachePath(urlString: String) -> String {
+        var path = urlString.md5
+        return cachePath!.stringByAppendingPathComponent(path)
+    }
+    
+    ///  下载多张图片 - 对于多张图片下载，并不处理错误！
     ///
     ///  :param: urls       图片 URL 数组
     ///  :param: completion 所有图片下载完成后的回调
@@ -67,10 +66,6 @@ public class SimpleNetwork {
             // 进入调度组
             dispatch_group_enter(group)
             downloadImage(url) { (result, error) -> () in
-                // 一张图片下载完成，会自动保存在缓存目录
-                // 下载多张图片的时候，有可能有些有错误，有些没错误！
-                // 暂时不处理
-                
                 // 离开调度组
                 dispatch_group_leave(group)
             }
@@ -101,7 +96,8 @@ public class SimpleNetwork {
             return
         }
         
-        // 3. 下载图像
+        // 3. 下载图像 － 如果 url 真的无法从字符串创建
+        // 不会调用 completion 的回调
         if let url = NSURL(string: urlString) {
             self.session!.downloadTaskWithURL(url) { (location, _, error) -> Void in
                 
@@ -117,11 +113,16 @@ public class SimpleNetwork {
                 // 直接回调，不传递任何参数
                 completion(result: nil, error: nil)
             }.resume()
+        } else {
+            let error = NSError(domain: SimpleNetwork.errorDomain, code: -1, userInfo: ["error": "无法创建 URL"])
+            completion(result: nil, error: error)
         }
     }
     
+    // 在 swift 中，一个命名空间内部，几乎都是开放的，彼此可以互相访问
+    // 如果不想开发的内容，可以使用 private 保护起来
     /// 完整图像缓存路径
-    lazy var cachePath: String? = {
+    private lazy var cachePath: String? = {
         // 1. cache
         var path = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.CachesDirectory, NSSearchPathDomainMask.UserDomainMask, true).last as! String
         path = path.stringByAppendingPathComponent(imageCachePath)
@@ -155,7 +156,7 @@ public class SimpleNetwork {
     ///  :param: urlString  urlString
     ///  :param: params     可选参数字典
     ///  :param: completion 完成回调
-    public func requestJSON(method: HTTPMethod, _ urlString: String, _ params: [String: String]?, completion: Completion) {
+    func requestJSON(method: HTTPMethod, _ urlString: String, _ params: [String: String]?, _ completion: Completion) {
         
         // 实例化网络请求
         if let request = request(method, urlString, params) {
@@ -199,7 +200,7 @@ public class SimpleNetwork {
     }
     
     // 静态属性，在 Swift 中类属性可以返回值但是不能存储数值
-    static let errorDomain = "com.itheima.error"
+    private static let errorDomain = "com.itheima.error"
     
     ///  返回网络访问的请求
     ///
@@ -208,7 +209,7 @@ public class SimpleNetwork {
     ///  :param: params    可选参数字典
     ///
     ///  :returns: 可选网络请求
-    func request(method: HTTPMethod, _ urlString: String, _ params: [String: String]?) -> NSURLRequest? {
+    private func request(method: HTTPMethod, _ urlString: String, _ params: [String: String]?) -> NSURLRequest? {
         
         // isEmpty 是 "" & nil
         if urlString.isEmpty {
@@ -254,7 +255,7 @@ public class SimpleNetwork {
     ///  :param: params 可选字典
     ///
     ///  :returns: 拼接完成的字符串
-    func queryString(params: [String: String]?) -> String? {
+    private func queryString(params: [String: String]?) -> String? {
         
         // 0. 判断参数
         if params == nil {
@@ -273,11 +274,8 @@ public class SimpleNetwork {
         return join("&", array)
     }
     
-    ///  公共的初始化函数，外部就能够调用了
-    public init() {}
-    
     ///  全局网络会话，提示，可以利用构造函数，设置不同的网络会话配置
-    lazy var session: NSURLSession? = {
+    private lazy var session: NSURLSession? = {
         return NSURLSession.sharedSession()
     }()
 }
