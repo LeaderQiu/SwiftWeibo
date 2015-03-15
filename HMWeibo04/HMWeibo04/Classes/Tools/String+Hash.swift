@@ -21,9 +21,11 @@ extension String  {
         
         CC_MD5(str!, strLen, result)
         
-        var hash = NSMutableString()
+//        var hash = NSMutableString()
+        var hash = String()
         for i in 0..<digestLen {
-            hash.appendFormat("%02x", result[i])
+//            hash.appendFormat("%02x", result[i])
+            hash += String(format: "%02x", arguments: [result[i]])
         }
         
         result.dealloc(digestLen)

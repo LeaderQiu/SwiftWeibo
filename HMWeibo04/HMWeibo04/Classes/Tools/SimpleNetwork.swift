@@ -84,14 +84,12 @@ class SimpleNetwork {
     ///  :param: completion 完成回调
     func downloadImage(urlString: String, _ completion: Completion) {
         
-        // 1. 将下载的图像 url 进行 md5
-        var path = urlString.md5
-        // 2. 目标路径
-        path = cachePath!.stringByAppendingPathComponent(path)
+        // 1. 目标路径
+        let path = fullImageCachePath(urlString)
         
-        // 2.1 缓存检测，如果文件已经下载完成直接返回
+        // 2. 缓存检测，如果文件已经下载完成直接返回
         if NSFileManager.defaultManager().fileExistsAtPath(path) {
-            println("\(urlString) 图片已经被缓存")
+//            println("\(urlString) 图片已经被缓存")
             completion(result: nil, error: nil)
             return
         }
@@ -131,7 +129,7 @@ class SimpleNetwork {
         var isDirectory: ObjCBool = true
         // 无论存在目录还是文件，都会返回 true，是否是路径由 isDirectory 来决定
         let exists = NSFileManager.defaultManager().fileExistsAtPath(path, isDirectory: &isDirectory)
-        println("isDirectory： \(isDirectory) exists \(exists) path: \(path)")
+//        println("isDirectory： \(isDirectory) exists \(exists) path: \(path)")
         
         // 3. 如果有同名的文件－干掉 
         // 一定需要判断是否是文件，否则目录也同样会被删除

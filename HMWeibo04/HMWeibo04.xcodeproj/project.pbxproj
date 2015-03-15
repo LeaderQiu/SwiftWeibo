@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18087ECD1AABEA37003E6A6E /* PhotoBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18087ECC1AABEA37003E6A6E /* PhotoBrowserViewController.swift */; };
+		18087ECF1AABEA47003E6A6E /* PhotoBrowser.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18087ECE1AABEA47003E6A6E /* PhotoBrowser.storyboard */; };
 		18209A8A1AA7FA0A007877ED /* Compose.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18209A891AA7FA0A007877ED /* Compose.storyboard */; };
 		18209A8C1AA7FA22007877ED /* ComposeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18209A8B1AA7FA22007877ED /* ComposeViewController.swift */; };
 		18209A8E1AA800CB007877ED /* MainNavViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18209A8D1AA800CB007877ED /* MainNavViewController.swift */; };
@@ -59,6 +61,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		18087ECC1AABEA37003E6A6E /* PhotoBrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoBrowserViewController.swift; sourceTree = "<group>"; };
+		18087ECE1AABEA47003E6A6E /* PhotoBrowser.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = PhotoBrowser.storyboard; sourceTree = "<group>"; };
 		18209A891AA7FA0A007877ED /* Compose.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Compose.storyboard; sourceTree = "<group>"; };
 		18209A8B1AA7FA22007877ED /* ComposeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeViewController.swift; sourceTree = "<group>"; };
 		18209A8D1AA800CB007877ED /* MainNavViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainNavViewController.swift; sourceTree = "<group>"; };
@@ -121,6 +125,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		18087ECB1AABEA14003E6A6E /* PhotoBrowser(照片浏览器) */ = {
+			isa = PBXGroup;
+			children = (
+				18087ECC1AABEA37003E6A6E /* PhotoBrowserViewController.swift */,
+				18087ECE1AABEA47003E6A6E /* PhotoBrowser.storyboard */,
+			);
+			name = "PhotoBrowser(照片浏览器)";
+			path = PhotoBrowser;
+			sourceTree = "<group>";
+		};
 		18209A881AA7F9F9007877ED /* Compose(撰写微博) */ = {
 			isa = PBXGroup;
 			children = (
@@ -239,6 +253,7 @@
 		18EB6EF71AA3F86F0087022C /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				18087ECB1AABEA14003E6A6E /* PhotoBrowser(照片浏览器) */,
 				18209A881AA7F9F9007877ED /* Compose(撰写微博) */,
 				18EB6EFC1AA3F86F0087022C /* OAuth(身份验证) */,
 				18EB6EFA1AA3F86F0087022C /* Main(公共共享的UI) */,
@@ -404,6 +419,7 @@
 			files = (
 				18EB6EDC1AA3F68F0087022C /* Images.xcassets in Resources */,
 				18942A501AA3FEF30035A3E7 /* SVProgressHUD.bundle in Resources */,
+				18087ECF1AABEA47003E6A6E /* PhotoBrowser.storyboard in Resources */,
 				186CA5AA1AA7E51B00B078CC /* Profile.storyboard in Resources */,
 				186CA59E1AA7E4D100B078CC /* Discover.storyboard in Resources */,
 				186CA5A21AA7E4E800B078CC /* Home.storyboard in Resources */,
@@ -444,6 +460,7 @@
 				186CA5A81AA7E51500B078CC /* ProfileViewController.swift in Sources */,
 				186CA59A1AA7E48F00B078CC /* MainTabBar.swift in Sources */,
 				186CA5A41AA7E4F900B078CC /* MessageViewController.swift in Sources */,
+				18087ECD1AABEA37003E6A6E /* PhotoBrowserViewController.swift in Sources */,
 				1847F9311AA949FE00B97B08 /* StatusCell.swift in Sources */,
 				18EB6ED51AA3F68F0087022C /* AppDelegate.swift in Sources */,
 				18942A4F1AA3FEF30035A3E7 /* SVIndefiniteAnimatedView.m in Sources */,

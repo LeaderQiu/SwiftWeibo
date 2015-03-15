@@ -81,8 +81,8 @@ class StatusesData: NSObject, DictModelProtocol {
         var list = [String]()
         
         for status in statuses! {
-            // 继续遍历 pic_urls
-            if let urls = status.pic_urls {
+            // 继续遍历 pic_urls（原创微博的图片）
+            if let urls = status.pictureUrls {
                 for pic in urls {
                     list.append(pic.thumbnail_pic!)
                 }
@@ -115,9 +115,32 @@ class Status: NSObject, DictModelProtocol {
     var attitudes_count: Int = 0
     ///  配图数组
     var pic_urls: [StatusPictureURL]?
+    
+    /// 要显示的配图数组
+    /// 如果是原创微博，就使用 pic_urls
+    /// 如果是转发微博，使用 retweeted_status.pic_urls
+    var pictureUrls: [StatusPictureURL]? {
+        get {
+            if retweeted_status != nil {
+                return retweeted_status?.pic_urls
+            } else {
+                return pic_urls
+            }
+        }
+    }
+    
+    /// 所有大图的 URL － 计算属性
+    var largeUrls: [String]? {
+        get {
+            // 可以使用 kvc 直接拿值
+            var urls = self.valueForKeyPath("pictureUrls.large_pic") as? NSArray
+            return urls as? [String]
+        }
+    }
+    
     /// 用户信息
     var user: UserInfo?
-    /// 转发微博
+    /// 转发微博，如果有就是转发微博，如果没有就是原创微博
     var retweeted_status: Status?
     
     static func customClassMapping() -> [String : String]? {
@@ -130,5 +153,26 @@ class Status: NSObject, DictModelProtocol {
 ///  微博配图模型
 class StatusPictureURL: NSObject {
     ///  缩略图 URL
-    var thumbnail_pic: String?
+    var thumbnail_pic: String? {
+        didSet {
+            // 生成大图的 URL，将 thumbnail_pic 替换成 large
+            // 1. 定义一个字符串
+            var str = thumbnail_pic! as NSString
+            // 2. 直接替换字符串
+            large_pic = str.stringByReplacingOccurrencesOfString("thumbnail", withString: "large")
+//            // 2. 查找thumbnail_pic在字符串中出现的范围
+//            let range = (str).rangeOfString("thumbnail")
+//            // 3. 处理字符串
+//            // http://ww2.sinaimg.cn/thumbnail/644471aegw1epy4a544u3j20c80820te.jpg
+//            //
+//            // 判断是否找打对应的字符串
+//            if range.location != NSNotFound {
+//                // 拼接大图 url 地址
+//                large_pic = str.substringToIndex(range.location) + "large" + str.substringFromIndex(range.location + range.length)
+//            }
+        }
+    }
+    
+    ///  大图 URL
+    var large_pic: String?
 }

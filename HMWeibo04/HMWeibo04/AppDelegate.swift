@@ -15,6 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
+        println("hello".md5)
+        
         // 检查沙盒中是否已经保存的 token
         // 如果已经存在 token，应该直接显示主界面
         if let token = AccessToken.loadAccessToken() {
